@@ -42,7 +42,9 @@ class DataStore {
     private func getData(completion: @escaping (TeamMembers?, Error?) -> Void) {
         let api = API()
         api.requestMembers { (members, error) in
-            completion(members, error)
+            DispatchQueue.main.async {
+                completion(members, error)
+            }
         }
     }
 }
