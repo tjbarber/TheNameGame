@@ -18,7 +18,9 @@ protocol NameGameDelegate: class {
     var selectedMember: TeamMember? { get set }
     var attemptsMade: Int { get set }
     var gameTimer: Timer? { get set }
+    var hintTimer: Timer? { get set }
     var elapsedTime: Int { get set }
+    var hintModeEnabled: Bool { get set }
     
     func checkAnswer(tappedMember: TeamMember, selectedMember: TeamMember) -> Bool
 }

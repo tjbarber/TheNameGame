@@ -12,7 +12,12 @@ class NameGameViewController: UIViewController {
     
     var members: TeamMembers = []
     var buttonMap: [UIButton: TeamMember] = [:]
+    var removedButtonMap: [UIButton: TeamMember] = [:]
     var gameTimer: Timer?
+    
+    var hintTimer: Timer?
+    var hintModeEnabled = false
+    var maxHints = 0
     
     var elapsedTime: Int = 0 {
         didSet {
@@ -52,6 +57,11 @@ class NameGameViewController: UIViewController {
         
         self.loadGameData()
         self.startTimer()
+        
+        if self.hintModeEnabled {
+            self.startHintModeTimer()
+            self.setMaxHints()
+        }
     }
 
     @IBAction func faceTapped(_ button: FaceButton) {
@@ -154,6 +164,15 @@ class NameGameViewController: UIViewController {
         self.gameTimer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(self.updateElapsedTime), userInfo: nil, repeats: true)
     }
     
+    func startHintModeTimer() {
+        self.hintTimer = Timer.scheduledTimer(timeInterval: 10.0, target: self, selector: #selector(self.removeRandomMemberFromSelection), userInfo: nil, repeats: true)
+    }
+    
+    func setMaxHints() {
+        // We can only give so many hints. If we have infinite hints we'll remove the correct answer
+        self.maxHints = self.nameGame.numberPeople - 1
+    }
+    
     func updateQuestionLabel() {
         guard let firstName = self.selectedMember?.firstName,
               let lastName  = self.selectedMember?.lastName else { return }
@@ -167,6 +186,28 @@ class NameGameViewController: UIViewController {
     
     @objc func updateElapsedTime() {
         self.elapsedTime += 1
+    }
+    
+    @objc func removeRandomMemberFromSelection() {
+        guard let randomMember = self.buttonMap.randomElement() else { return }
+        
+        if randomMember.value.id == self.selectedMember?.id && self.removedButtonMap.count == self.maxHints {
+            self.hintTimer?.invalidate()
+            return
+        }
+        
+        if self.removedButtonMap[randomMember.key] != nil || randomMember.value.id == self.selectedMember?.id {
+            self.removeRandomMemberFromSelection()
+            return
+        } else {
+            let button = randomMember.key
+            self.removedButtonMap[randomMember.key] = randomMember.value
+            
+            button.isUserInteractionEnabled = false
+            UIView.animate(withDuration: 1.0) {
+                button.alpha = 0.0
+            }
+        }
     }
     
     func updateElapsedTimeLabel() {
