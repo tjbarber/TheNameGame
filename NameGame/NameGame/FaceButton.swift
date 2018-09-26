@@ -13,6 +13,11 @@ open class FaceButton: UIButton {
 
     var id: Int = 0
     var tintView: UIView = UIView(frame: CGRect.zero)
+    var teamMember: TeamMember? {
+        didSet {
+            self.loadImage()
+        }
+    }
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -37,6 +42,12 @@ open class FaceButton: UIButton {
         tintView.topAnchor.constraint(equalTo: topAnchor).isActive = true
         tintView.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
     }
-
-    // TODO: Show the user's face on the button.
+    
+    func loadImage() {
+        
+    }
+    
+//    func loadImageFor(_ member: TeamMember) {
+//        self.imageView.image =
+//    }
 }

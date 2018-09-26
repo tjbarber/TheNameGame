@@ -9,6 +9,11 @@
 import UIKit
 
 class NameGameViewController: UIViewController {
+    
+    var members: TeamMembersDict = [:]
+    var selectedMember: TeamMember?
+    
+    let nameGame = NameGame()
 
     @IBOutlet weak var outerStackView: UIStackView!
     @IBOutlet weak var innerStackView1: UIStackView!
@@ -21,9 +26,18 @@ class NameGameViewController: UIViewController {
         
         let orientation: UIDeviceOrientation = self.view.frame.size.height > self.view.frame.size.width ? .portrait : .landscapeLeft
         configureSubviews(orientation)
+        
+        nameGame.delegate = self
+        
+        self.loadGameData()
     }
 
     @IBAction func faceTapped(_ button: FaceButton) {
+        if button.teamMember?.id == self.selectedMember?.id {
+            // success
+        } else {
+            // no success
+        }
     }
 
     func configureSubviews(_ orientation: UIDeviceOrientation) {
@@ -44,7 +58,41 @@ class NameGameViewController: UIViewController {
         let orientation: UIDeviceOrientation = size.height > size.width ? .portrait : .landscapeLeft
         configureSubviews(orientation)
     }
+
+    func loadGameData() {
+        self.nameGame.loadGameData { [unowned self] memberDict, error in
+            if error != nil {
+                // FIXME: Add error handling
+            }
+            
+            if let memberDict = memberDict {
+                self.members = memberDict
+                
+                if let selectedMember = memberDict.randomElement() {
+                    // selectedMember is a dictionary of type [String: TeamMember]
+                    // Getting the value and assigning it to self.selectedMember
+                    self.selectedMember = selectedMember.value
+                }
+                
+                self.setMembersOnImageButtons()
+            }
+        }
+    }
+    
+    func setMembersOnImageButtons() {
+        guard let imageButtons = self.imageButtons else { return }
+        
+        let imageButtonCollectionMaxIndex = (imageButtons.count - 1)
+        var imageButtonIndex = 0
+        
+        for (_, member) in self.members {
+            if imageButtonIndex > imageButtonCollectionMaxIndex { break }
+            
+            let imageButton = self.imageButtons[imageButtonIndex]
+            imageButton.teamMember = member
+            imageButtonIndex += 1
+        }
+    }
 }
 
-extension NameGameViewController: NameGameDelegate {
-}
+extension NameGameViewController: NameGameDelegate {}
