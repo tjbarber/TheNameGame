@@ -35,8 +35,12 @@ class ImageDownloader: Operation {
             return
         }
         
-        guard let member = self.member,
-              let imageURLString = member.headshot.url else { return }
+        guard let member = self.member else { return }
+        
+        guard let imageURLString = member.headshot.url else {
+            member.headshot.image = #imageLiteral(resourceName: "WTPlaceholder")
+            return
+        }
         
         let imageURLStringWithScheme = "http:\(imageURLString)"
         guard let imageURL = URL(string: imageURLStringWithScheme) else { return }
