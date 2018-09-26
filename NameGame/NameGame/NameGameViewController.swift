@@ -10,14 +10,26 @@ import UIKit
 
 class NameGameViewController: UIViewController {
     
+    @IBOutlet weak var outerStackView: UIStackView!
+    @IBOutlet weak var innerStackView1: UIStackView!
+    @IBOutlet weak var innerStackView2: UIStackView!
+    @IBOutlet weak var questionLabel: UILabel!
+    @IBOutlet var imageButtons: [FaceButton]!
+    @IBOutlet weak var attemptsLabel: UILabel!
+    @IBOutlet weak var timeElapsedLabel: UILabel!
+    
+    let nameGame = NameGame()
     var members: TeamMembers = []
     var buttonMap: [UIButton: TeamMember] = [:]
     var removedButtonMap: [UIButton: TeamMember] = [:]
-    var gameTimer: Timer?
+    var selectedMember: TeamMember? {
+        didSet {
+            self.updateQuestionLabel()
+        }
+    }
     
-    var hintTimer: Timer?
-    var hintModeEnabled = false
-    var maxHints = 0
+    // Stats properties
+    var gameTimer: Timer?
     
     var elapsedTime: Int = 0 {
         didSet {
@@ -31,22 +43,11 @@ class NameGameViewController: UIViewController {
         }
     }
     
-    var selectedMember: TeamMember? {
-        didSet {
-            self.updateQuestionLabel()
-        }
-    }
-    
-    let nameGame = NameGame()
+    // Hint mode methods
+    var hintTimer: Timer?
+    var hintModeEnabled = false
+    var maxHints = 0
 
-    @IBOutlet weak var outerStackView: UIStackView!
-    @IBOutlet weak var innerStackView1: UIStackView!
-    @IBOutlet weak var innerStackView2: UIStackView!
-    @IBOutlet weak var questionLabel: UILabel!
-    @IBOutlet var imageButtons: [FaceButton]!
-    @IBOutlet weak var attemptsLabel: UILabel!
-    @IBOutlet weak var timeElapsedLabel: UILabel!
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -160,10 +161,27 @@ class NameGameViewController: UIViewController {
         ImageOperations.sharedInstance.downloadQueue.addOperation(downloader)
     }
     
-    func startTimer() {
-        self.gameTimer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(self.updateElapsedTime), userInfo: nil, repeats: true)
+    func updateQuestionLabel() {
+        guard let firstName = self.selectedMember?.firstName,
+              let lastName  = self.selectedMember?.lastName else { return }
+        let questionLabelText = "Who is \(firstName) \(lastName)?"
+        self.questionLabel.text = questionLabelText
     }
-    
+}
+
+// MARK: NameGameDelegate
+extension NameGameViewController: NameGameDelegate {
+    func checkAnswer(tappedMember: TeamMember, selectedMember: TeamMember) -> Bool {
+        if tappedMember.id == selectedMember.id {
+            return true
+        } else {
+            return false
+        }
+    }
+}
+
+// MARK: Hint Mode Methods
+extension NameGameViewController {
     func startHintModeTimer() {
         self.hintTimer = Timer.scheduledTimer(timeInterval: 10.0, target: self, selector: #selector(self.removeRandomMemberFromSelection), userInfo: nil, repeats: true)
     }
@@ -171,21 +189,6 @@ class NameGameViewController: UIViewController {
     func setMaxHints() {
         // We can only give so many hints. If we have infinite hints we'll remove the correct answer
         self.maxHints = self.nameGame.numberPeople - 1
-    }
-    
-    func updateQuestionLabel() {
-        guard let firstName = self.selectedMember?.firstName,
-              let lastName  = self.selectedMember?.lastName else { return }
-        let questionLabelText = "Who is \(firstName) \(lastName)?"
-        self.questionLabel.text = questionLabelText
-    }
-    
-    func updateAttemptsLabel() {
-        self.attemptsLabel.text = "Attempts made: \(self.attemptsMade)"
-    }
-    
-    @objc func updateElapsedTime() {
-        self.elapsedTime += 1
     }
     
     @objc func removeRandomMemberFromSelection() {
@@ -209,6 +212,21 @@ class NameGameViewController: UIViewController {
             }
         }
     }
+}
+
+// MARK: Stats tracking
+extension NameGameViewController {
+    func startTimer() {
+        self.gameTimer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(self.updateElapsedTime), userInfo: nil, repeats: true)
+    }
+    
+    func updateAttemptsLabel() {
+        self.attemptsLabel.text = "Attempts made: \(self.attemptsMade)"
+    }
+    
+    @objc func updateElapsedTime() {
+        self.elapsedTime += 1
+    }
     
     func updateElapsedTimeLabel() {
         let minutes = self.elapsedTime / 60
@@ -223,15 +241,5 @@ class NameGameViewController: UIViewController {
         }
         
         self.timeElapsedLabel.text = "Time: \(minutesStr):\(secondsStr)"
-    }
-}
-
-extension NameGameViewController: NameGameDelegate {
-    func checkAnswer(tappedMember: TeamMember, selectedMember: TeamMember) -> Bool {
-        if tappedMember.id == selectedMember.id {
-            return true
-        } else {
-            return false
-        }
     }
 }
