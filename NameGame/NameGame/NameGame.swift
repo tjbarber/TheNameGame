@@ -14,8 +14,10 @@ enum NameGameError: Error {
 }
 
 protocol NameGameDelegate: class {
-    var members: [String: TeamMember] { get set }
+    var members: [TeamMember] { get set }
     var selectedMember: TeamMember? { get set }
+    
+    func checkAnswer(tappedMember: TeamMember, selectedMember: TeamMember) -> Bool
 }
 
 class NameGame {
@@ -25,7 +27,7 @@ class NameGame {
     let numberPeople = 6
 
     // Load JSON data from API
-    func loadGameData(completion: @escaping ([String: TeamMember]?, Error?) -> Void) {
+    func loadGameData(completion: @escaping ([TeamMember]?, Error?) -> Void) {
         DataStore.sharedInstance.getMembers { [unowned self] members, error in
             if error != nil {
                 completion(nil, error)
@@ -47,8 +49,8 @@ class NameGame {
         
     }
     
-    fileprivate func randomlySelect(_ members: TeamMembers) -> [String: TeamMember] {
-        var selectedMembers = [String: TeamMember]()
+    fileprivate func randomlySelect(_ members: TeamMembers) -> [TeamMember] {
+        var selectedMembers = [TeamMember]()
         
         while selectedMembers.count < self.numberPeople {
             
@@ -59,8 +61,8 @@ class NameGame {
                 break
             }
             
-            if selectedMembers[member.id] == nil {
-                selectedMembers[member.id] = member
+            if selectedMembers.filter({ $0.id == member.id }).count == 0 {
+                selectedMembers.append(member)
             }
         }
         

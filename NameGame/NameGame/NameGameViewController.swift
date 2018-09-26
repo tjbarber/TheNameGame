@@ -10,7 +10,9 @@ import UIKit
 
 class NameGameViewController: UIViewController {
     
-    var members: TeamMembersDict = [:]
+    var members: TeamMembers = []
+    var buttonMap: [UIButton: TeamMember] = [:]
+    
     var selectedMember: TeamMember? {
         didSet {
             self.updateQuestionLabel()
@@ -37,10 +39,15 @@ class NameGameViewController: UIViewController {
     }
 
     @IBAction func faceTapped(_ button: FaceButton) {
-        if button.teamMember?.id == self.selectedMember?.id {
-            print("yes")
+        guard let tappedMember = self.getMemberFromButtonMap(button),
+              let selectedMember = self.selectedMember else { return }
+        
+        let isAnswerCorrect = self.checkAnswer(tappedMember: tappedMember, selectedMember: selectedMember)
+        
+        if isAnswerCorrect {
+            AlertHelper.showAlert(withTitle: "Congratulations!", withMessage: "You know your coworkers name!", presentingViewController: self)
         } else {
-            print("no")
+            AlertHelper.showAlert(withTitle: "Oops!", withMessage: "You chose the wrong person. Try again!", presentingViewController: self)
         }
     }
 
@@ -64,38 +71,62 @@ class NameGameViewController: UIViewController {
     }
 
     func loadGameData() {
-        self.nameGame.loadGameData { [unowned self] memberDict, error in
+        self.nameGame.loadGameData { [unowned self] members, error in
+            
             if error != nil {
                 // FIXME: Add error handling
             }
             
-            if let memberDict = memberDict {
-                self.members = memberDict
+            if let members = members {
+                self.members = members
                 
-                if let selectedMember = memberDict.randomElement() {
-                    // selectedMember is a dictionary of type [String: TeamMember]
-                    // Getting the value and assigning it to self.selectedMember
-                    self.selectedMember = selectedMember.value
+                if let selectedMember = members.randomElement() {
+                    self.selectedMember = selectedMember
                 }
                 
-                self.setMembersOnImageButtons()
+                self.createButtonMap()
             }
         }
     }
     
-    func setMembersOnImageButtons() {
+    func createButtonMap() {
         guard let imageButtons = self.imageButtons else { return }
         
         let imageButtonCollectionMaxIndex = (imageButtons.count - 1)
         var imageButtonIndex = 0
         
-        for (_, member) in self.members {
+        for member in self.members {
             if imageButtonIndex > imageButtonCollectionMaxIndex { break }
             
             let imageButton = self.imageButtons[imageButtonIndex]
-            imageButton.teamMember = member
+            self.buttonMap[imageButton] = member
+            self.loadImage(forButton: imageButton, withMember: member)
             imageButtonIndex += 1
         }
+    }
+    
+    func getMemberFromButtonMap(_ button: FaceButton) -> TeamMember? {
+        return self.buttonMap[button]
+    }
+    
+    func loadImage(forButton button: FaceButton, withMember member: TeamMember) {
+        if ImageOperations.sharedInstance.downloadsInProgress[member.id] != nil {
+            return
+        }
+        
+        let downloader = ImageDownloader(member: member)
+        
+        downloader.completionBlock = { [weak button, weak member] in
+            DispatchQueue.main.async {
+                button?.setBackgroundImage(member?.headshot.image, for: UIControl.State.normal)
+                UIView.animate(withDuration: 0.8, delay: 0.0, options: .curveEaseIn, animations: {
+                    button?.tintView.alpha = 1.0
+                })
+            }
+        }
+        
+        ImageOperations.sharedInstance.downloadsInProgress[member.id] = downloader
+        ImageOperations.sharedInstance.downloadQueue.addOperation(downloader)
     }
     
     func updateQuestionLabel() {
@@ -106,4 +137,12 @@ class NameGameViewController: UIViewController {
     }
 }
 
-extension NameGameViewController: NameGameDelegate {}
+extension NameGameViewController: NameGameDelegate {
+    func checkAnswer(tappedMember: TeamMember, selectedMember: TeamMember) -> Bool {
+        if tappedMember.id == selectedMember.id {
+            return true
+        } else {
+            return false
+        }
+    }
+}

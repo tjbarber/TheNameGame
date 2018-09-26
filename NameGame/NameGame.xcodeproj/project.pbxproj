@@ -14,6 +14,7 @@
 		AC073CEF21598BA6007BFEAC /* DataStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC073CEE21598BA6007BFEAC /* DataStore.swift */; };
 		AC6880E6215B315100D4A9A5 /* ImageCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC6880E5215B315100D4A9A5 /* ImageCache.swift */; };
 		AC6880E8215B32FD00D4A9A5 /* ImageOperations.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC6880E7215B32FD00D4A9A5 /* ImageOperations.swift */; };
+		ACBE2BD6215C13D7005553AB /* AlertHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACBE2BD5215C13D7005553AB /* AlertHelper.swift */; };
 		EC6A1AB71C8F6E5A0071F529 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC6A1AB61C8F6E5A0071F529 /* AppDelegate.swift */; };
 		EC6A1AB91C8F6E5A0071F529 /* NameGameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC6A1AB81C8F6E5A0071F529 /* NameGameViewController.swift */; };
 		EC6A1ABC1C8F6E5A0071F529 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = EC6A1ABA1C8F6E5A0071F529 /* Main.storyboard */; };
@@ -29,6 +30,7 @@
 		AC073CEE21598BA6007BFEAC /* DataStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = DataStore.swift; path = Services/DataStore.swift; sourceTree = "<group>"; };
 		AC6880E5215B315100D4A9A5 /* ImageCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ImageCache.swift; path = Services/ImageCache.swift; sourceTree = "<group>"; };
 		AC6880E7215B32FD00D4A9A5 /* ImageOperations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ImageOperations.swift; path = Services/ImageOperations.swift; sourceTree = "<group>"; };
+		ACBE2BD5215C13D7005553AB /* AlertHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AlertHelper.swift; path = Helpers/AlertHelper.swift; sourceTree = "<group>"; };
 		EC6A1AB31C8F6E5A0071F529 /* NameGame.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NameGame.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		EC6A1AB61C8F6E5A0071F529 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		EC6A1AB81C8F6E5A0071F529 /* NameGameViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NameGameViewController.swift; sourceTree = "<group>"; };
@@ -85,6 +87,14 @@
 			name = Controllers;
 			sourceTree = "<group>";
 		};
+		ACBE2BD4215C13B8005553AB /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				ACBE2BD5215C13D7005553AB /* AlertHelper.swift */,
+			);
+			name = Helpers;
+			sourceTree = "<group>";
+		};
 		EC6A1AAA1C8F6E5A0071F529 = {
 			isa = PBXGroup;
 			children = (
@@ -108,6 +118,7 @@
 				0390A0101DDE529600C701A0 /* Views */,
 				AC6880E4215AB13300D4A9A5 /* Controllers */,
 				AC073CEB21597CA4007BFEAC /* Services */,
+				ACBE2BD4215C13B8005553AB /* Helpers */,
 				EC6A1AB61C8F6E5A0071F529 /* AppDelegate.swift */,
 				EC6A1ABA1C8F6E5A0071F529 /* Main.storyboard */,
 				EC6A1ABD1C8F6E5A0071F529 /* Assets.xcassets */,
@@ -197,6 +208,7 @@
 				EC6A1AB71C8F6E5A0071F529 /* AppDelegate.swift in Sources */,
 				03CE45611DD1302700ABF7FA /* NameGame.swift in Sources */,
 				AC073CED21597CB7007BFEAC /* API.swift in Sources */,
+				ACBE2BD6215C13D7005553AB /* AlertHelper.swift in Sources */,
 				ECF50AB51C9331CA00C41A1D /* FaceButton.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
