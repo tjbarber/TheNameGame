@@ -38,6 +38,7 @@ class NameGame {
             }
             
             let selectedMembers = self.randomlySelect(members)
+            
             completion(selectedMembers, nil)
         }
     }
@@ -49,7 +50,8 @@ class NameGame {
     fileprivate func randomlySelect(_ members: TeamMembers) -> [String: TeamMember] {
         var selectedMembers = [String: TeamMember]()
         
-        while selectedMembers.count > self.numberPeople {
+        while selectedMembers.count < self.numberPeople {
+            
             guard let member = getRandomMemberFrom(members) else {
                 // The reason we set this to break if member is nil is because
                 // randomElement() only returns nil if the collection is empty
