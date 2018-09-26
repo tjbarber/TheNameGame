@@ -28,7 +28,8 @@ open class FaceButton: UIButton {
         setTitleColor(.white, for: .normal)
         titleLabel?.alpha = 0.0
 
-        tintView.alpha = 0.0
+        tintView.alpha = 1.0
+        tintView.backgroundColor = UIColor.white
         tintView.translatesAutoresizingMaskIntoConstraints = false
         tintView.isUserInteractionEnabled = false
         addSubview(tintView)

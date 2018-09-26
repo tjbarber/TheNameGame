@@ -12,6 +12,19 @@ class NameGameViewController: UIViewController {
     
     var members: TeamMembers = []
     var buttonMap: [UIButton: TeamMember] = [:]
+    var gameTimer: Timer?
+    
+    var elapsedTime: Int = 0 {
+        didSet {
+            self.updateElapsedTimeLabel()
+        }
+    }
+    
+    var attemptsMade: Int = 0 {
+        didSet {
+            self.updateAttemptsLabel()
+        }
+    }
     
     var selectedMember: TeamMember? {
         didSet {
@@ -26,7 +39,9 @@ class NameGameViewController: UIViewController {
     @IBOutlet weak var innerStackView2: UIStackView!
     @IBOutlet weak var questionLabel: UILabel!
     @IBOutlet var imageButtons: [FaceButton]!
-
+    @IBOutlet weak var attemptsLabel: UILabel!
+    @IBOutlet weak var timeElapsedLabel: UILabel!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -36,6 +51,7 @@ class NameGameViewController: UIViewController {
         nameGame.delegate = self
         
         self.loadGameData()
+        self.startTimer()
     }
 
     @IBAction func faceTapped(_ button: FaceButton) {
@@ -44,11 +60,16 @@ class NameGameViewController: UIViewController {
         
         let isAnswerCorrect = self.checkAnswer(tappedMember: tappedMember, selectedMember: selectedMember)
         
-        if isAnswerCorrect {
-            AlertHelper.showAlert(withTitle: "Congratulations!", withMessage: "You know your coworkers name!", presentingViewController: self)
-        } else {
-            AlertHelper.showAlert(withTitle: "Oops!", withMessage: "You chose the wrong person. Try again!", presentingViewController: self)
+        let updateAttemptsBlock: (UIAlertAction) -> Void = { [unowned self] _ in
+            self.attemptsMade += 1
         }
+        
+        if isAnswerCorrect {
+            AlertHelper.showAlert(withTitle: "Congratulations!", withMessage: "You know your coworkers name!", presentingViewController: self, completionHandler: updateAttemptsBlock)
+        } else {
+            AlertHelper.showAlert(withTitle: "Oops!", withMessage: "You chose the wrong person. Try again!", presentingViewController: self, completionHandler: updateAttemptsBlock)
+        }
+        
     }
 
     func configureSubviews(_ orientation: UIDeviceOrientation) {
@@ -120,7 +141,7 @@ class NameGameViewController: UIViewController {
             DispatchQueue.main.async {
                 button?.setBackgroundImage(member?.headshot.image, for: UIControl.State.normal)
                 UIView.animate(withDuration: 0.8, delay: 0.0, options: .curveEaseIn, animations: {
-                    button?.tintView.alpha = 1.0
+                    button?.tintView.alpha = 0.0
                 })
             }
         }
@@ -129,11 +150,38 @@ class NameGameViewController: UIViewController {
         ImageOperations.sharedInstance.downloadQueue.addOperation(downloader)
     }
     
+    func startTimer() {
+        self.gameTimer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(self.updateElapsedTime), userInfo: nil, repeats: true)
+    }
+    
     func updateQuestionLabel() {
         guard let firstName = self.selectedMember?.firstName,
               let lastName  = self.selectedMember?.lastName else { return }
         let questionLabelText = "Who is \(firstName) \(lastName)?"
         self.questionLabel.text = questionLabelText
+    }
+    
+    func updateAttemptsLabel() {
+        self.attemptsLabel.text = "Attempts made: \(self.attemptsMade)"
+    }
+    
+    @objc func updateElapsedTime() {
+        self.elapsedTime += 1
+    }
+    
+    func updateElapsedTimeLabel() {
+        let minutes = self.elapsedTime / 60
+        let seconds = self.elapsedTime % 60
+        
+        let minutesStr = String(minutes)
+        var secondsStr = String(seconds)
+        
+        // If we only have a single second passed we don't want the timer looking like 1:5 when it should look like 1:05
+        if secondsStr.count == 1 {
+            secondsStr = "0\(secondsStr)"
+        }
+        
+        self.timeElapsedLabel.text = "Time: \(minutesStr):\(secondsStr)"
     }
 }
 

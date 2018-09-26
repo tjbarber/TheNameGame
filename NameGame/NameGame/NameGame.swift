@@ -16,6 +16,9 @@ enum NameGameError: Error {
 protocol NameGameDelegate: class {
     var members: [TeamMember] { get set }
     var selectedMember: TeamMember? { get set }
+    var attemptsMade: Int { get set }
+    var gameTimer: Timer? { get set }
+    var elapsedTime: Int { get set }
     
     func checkAnswer(tappedMember: TeamMember, selectedMember: TeamMember) -> Bool
 }
@@ -61,6 +64,7 @@ class NameGame {
                 break
             }
             
+            // A member can only be added if it's not already added
             if selectedMembers.filter({ $0.id == member.id }).count == 0 {
                 selectedMembers.append(member)
             }
