@@ -11,7 +11,11 @@ import UIKit
 class NameGameViewController: UIViewController {
     
     var members: TeamMembersDict = [:]
-    var selectedMember: TeamMember?
+    var selectedMember: TeamMember? {
+        didSet {
+            self.updateQuestionLabel()
+        }
+    }
     
     let nameGame = NameGame()
 
@@ -34,9 +38,9 @@ class NameGameViewController: UIViewController {
 
     @IBAction func faceTapped(_ button: FaceButton) {
         if button.teamMember?.id == self.selectedMember?.id {
-            // success
+            print("yes")
         } else {
-            // no success
+            print("no")
         }
     }
 
@@ -92,6 +96,13 @@ class NameGameViewController: UIViewController {
             imageButton.teamMember = member
             imageButtonIndex += 1
         }
+    }
+    
+    func updateQuestionLabel() {
+        guard let firstName = self.selectedMember?.firstName,
+              let lastName  = self.selectedMember?.lastName else { return }
+        let questionLabelText = "Who is \(firstName) \(lastName)?"
+        self.questionLabel.text = questionLabelText
     }
 }
 
