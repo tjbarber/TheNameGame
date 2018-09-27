@@ -56,6 +56,15 @@ class Headshot: Codable {
     }
 }
 
+class HeadshotImage {
+    var imageURLString: String
+    var image: UIImage?
+    
+    init(imageURLString: String) {
+        self.imageURLString = imageURLString
+    }
+}
+
 enum MIMEType: String, Codable {
     case imageJPEG = "image/jpeg"
     case imagePNG = "image/png"

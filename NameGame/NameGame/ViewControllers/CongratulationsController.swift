@@ -16,6 +16,7 @@ class CongratulationsController: UIViewController {
     @IBOutlet weak var memberImageView: UIImageView!
     
     var member: TeamMember?
+    var memberImage: HeadshotImage?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -25,7 +26,7 @@ class CongratulationsController: UIViewController {
             self.memberJobTitleLabel.text = member.jobTitle
             self.memberBioLabel.text = member.bio
             
-            self.memberImageView.image = member.headshot.image
+            self.memberImageView.image = memberImage?.image
         }
     }
 }

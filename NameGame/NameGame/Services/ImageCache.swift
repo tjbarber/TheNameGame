@@ -10,14 +10,9 @@ import UIKit
 
 class ImageCache {
     static let sharedInstance = ImageCache()
-    var cache = [String: UIImage]()
     
     func get(fileUrl: URL) -> UIImage? {
         let fileName = fileUrl.lastPathComponent
-        
-        if let image = self.cache[fileName] {
-            return image
-        }
         
         let documentsPath = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0]
         let imagePath = "\(documentsPath)/\(fileName)"
@@ -31,7 +26,6 @@ class ImageCache {
     
     func set(fileUrl: URL, image: UIImage) {
         let fileName = fileUrl.lastPathComponent
-        self.cache[fileName] = image
         
         let documentsPath = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0]
         let imagePath = "\(documentsPath)/\(fileName)"

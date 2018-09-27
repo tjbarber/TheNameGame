@@ -16,13 +16,14 @@ class NameGameViewController: UIViewController {
     @IBOutlet weak var questionLabel: UILabel!
     @IBOutlet var imageButtons: [FaceButton]!
     @IBOutlet weak var attemptsLabel: UILabel!
-    @IBOutlet weak var timeElapsedLabel: UILabel!
+    @IBOutlet weak var elapsedTimeLabel: UILabel!
     
     let nameGame = NameGame()
     let timeFormatter = TimeFormattingHelper()
     var members: TeamMembers = []
     var buttonMap: [UIButton: TeamMember] = [:]
     var removedButtonMap: [UIButton: TeamMember] = [:]
+    var memberImages: [String: HeadshotImage] = [:]
     var selectedMember: TeamMember? {
         didSet {
             self.updateQuestionLabel()
@@ -54,10 +55,39 @@ class NameGameViewController: UIViewController {
         
         let orientation: UIDeviceOrientation = self.view.frame.size.height > self.view.frame.size.width ? .portrait : .landscapeLeft
         configureSubviews(orientation)
-        
         nameGame.delegate = self
-        
         self.loadGameData()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        self.questionLabel.alpha = 0.0
+        self.attemptsLabel.alpha = 0.0
+        self.elapsedTimeLabel.alpha = 0.0
+        self.outerStackView.alpha = 0.0
+        
+        for imageButton in self.imageButtons {
+            imageButton.alpha = 1.0
+        }
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        UIView.animate(withDuration: 0.5, delay: 0.5, options: .curveEaseIn, animations: { [unowned self] in
+            self.questionLabel.alpha = 1.0
+        })
+        
+        UIView.animate(withDuration: 0.5, delay: 1.0, options: .curveEaseIn, animations: { [unowned self] in
+            self.attemptsLabel.alpha = 1.0
+            self.elapsedTimeLabel.alpha = 1.0
+        })
+        
+        UIView.animate(withDuration: 0.5, delay: 1.5, options: .curveEaseIn, animations: { [weak self] in
+            self?.outerStackView.alpha = 1.0
+        })
+        
         self.startTimer()
         
         if self.hintModeEnabled {
@@ -76,6 +106,7 @@ class NameGameViewController: UIViewController {
         
         if isAnswerCorrect {
             StatsStore.sharedInstance.addStats(elapsedTime: self.elapsedTime, attemptsMade: self.attemptsMade)
+            self.invalidateTimers()
             self.performSegue(withIdentifier: "congratulationsSegue", sender: self)
         } else {
             AlertHelper.showAlert(withTitle: "Oops!", withMessage: "You chose the wrong person. Try again!", presentingViewController: self)
@@ -105,6 +136,11 @@ class NameGameViewController: UIViewController {
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         guard let viewController = segue.destination as? CongratulationsController else { return }
         viewController.member = selectedMember
+        
+        if let selectedMember = selectedMember,
+           let memberImage = memberImages[selectedMember.id] {
+            viewController.memberImage = memberImage
+        }
     }
 
     func loadGameData() {
@@ -114,10 +150,10 @@ class NameGameViewController: UIViewController {
                 // FIXME: Add error handling
             }
             
-            if let members = members {
-                self.members = members
+            if let unwrappedMembers = members {
+                self.members = unwrappedMembers
                 
-                if let selectedMember = members.randomElement() {
+                if let selectedMember = unwrappedMembers.randomElement() {
                     self.selectedMember = selectedMember
                 }
                 
@@ -151,11 +187,16 @@ class NameGameViewController: UIViewController {
             return
         }
         
-        let downloader = ImageDownloader(member: member)
+        guard let imageURLString = member.headshot.url else { return }
+        let headshotImage = HeadshotImage(imageURLString: imageURLString)
+        let downloader = ImageDownloader(headshotImage: headshotImage)
         
         downloader.completionBlock = { [weak button, weak member] in
             DispatchQueue.main.async {
-                button?.setBackgroundImage(member?.headshot.image, for: UIControl.State.normal)
+                guard let member = member else { return }
+                ImageOperations.sharedInstance.downloadsInProgress.removeValue(forKey: member.id)
+                self.memberImages[member.id] = headshotImage
+                button?.setBackgroundImage(headshotImage.image, for: UIControl.State.normal)
                 UIView.animate(withDuration: 0.8, delay: 0.0, options: .curveEaseIn, animations: {
                     button?.tintView.alpha = 0.0
                 })
@@ -171,6 +212,16 @@ class NameGameViewController: UIViewController {
               let lastName  = self.selectedMember?.lastName else { return }
         let questionLabelText = "Who is \(firstName) \(lastName)?"
         self.questionLabel.text = questionLabelText
+    }
+    
+    func invalidateTimers() {
+        if let gameTimer = self.gameTimer {
+            gameTimer.invalidate()
+        }
+        
+        if let hintTimer = self.hintTimer {
+            hintTimer.invalidate()
+        }
     }
 }
 
@@ -188,7 +239,9 @@ extension NameGameViewController: NameGameDelegate {
 // MARK: Hint Mode Methods
 extension NameGameViewController {
     func startHintModeTimer() {
-        self.hintTimer = Timer.scheduledTimer(timeInterval: 10.0, target: self, selector: #selector(self.removeRandomMemberFromSelection), userInfo: nil, repeats: true)
+        self.hintTimer = Timer.scheduledTimer(withTimeInterval: 10.0, repeats: true) { [weak self] _ in
+            self?.removeRandomMemberFromSelection()
+        }
     }
     
     func setMaxHints() {
@@ -212,7 +265,7 @@ extension NameGameViewController {
             self.removedButtonMap[randomMember.key] = randomMember.value
             
             button.isUserInteractionEnabled = false
-            UIView.animate(withDuration: 1.0) {
+            UIView.animate(withDuration: 1.0) { [unowned button] in
                 button.alpha = 0.0
             }
         }
@@ -222,19 +275,21 @@ extension NameGameViewController {
 // MARK: Stats tracking
 extension NameGameViewController {
     func startTimer() {
-        self.gameTimer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(self.updateElapsedTime), userInfo: nil, repeats: true)
+        self.gameTimer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { [weak self] _ in
+            self?.updateElapsedTime()
+        }
     }
     
     func updateAttemptsLabel() {
         self.attemptsLabel.text = "Attempts made: \(self.attemptsMade)"
     }
     
-    @objc func updateElapsedTime() {
+    func updateElapsedTime() {
         self.elapsedTime += 1
     }
     
     func updateElapsedTimeLabel() {
         let elapsedTimeString = timeFormatter.timeStringFromInterval(self.elapsedTime)
-        self.timeElapsedLabel.text = "Time: \(elapsedTimeString)"
+        self.elapsedTimeLabel.text = "Time: \(elapsedTimeString)"
     }
 }

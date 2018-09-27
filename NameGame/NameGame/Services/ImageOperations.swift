@@ -24,10 +24,10 @@ class ImageOperations {
 }
 
 class ImageDownloader: Operation {
-    var member: TeamMember?
+    var headshotImage: HeadshotImage?
     
-    init(member: TeamMember) {
-        self.member = member
+    init(headshotImage: HeadshotImage) {
+        self.headshotImage = headshotImage
     }
     
     override func main() {
@@ -35,18 +35,13 @@ class ImageDownloader: Operation {
             return
         }
         
-        guard let member = self.member else { return }
+        guard let headshotImage = self.headshotImage else { return }
         
-        guard let imageURLString = member.headshot.url else {
-            member.headshot.image = #imageLiteral(resourceName: "WTPlaceholder")
-            return
-        }
-        
-        let imageURLStringWithScheme = "http:\(imageURLString)"
+        let imageURLStringWithScheme = "http:\(headshotImage.imageURLString)"
         guard let imageURL = URL(string: imageURLStringWithScheme) else { return }
         
         if let cachedImage = ImageCache.sharedInstance.get(fileUrl: imageURL) {
-            member.headshot.image = cachedImage
+            headshotImage.image = cachedImage
             return
         }
         
@@ -59,7 +54,7 @@ class ImageDownloader: Operation {
             guard let image = UIImage(data: imageData) else { return }
             
             ImageCache.sharedInstance.set(fileUrl: imageURL, image: image)
-            member.headshot.image = image
+            headshotImage.image = image
         } catch (let e) {
             // set image status
             print(e.localizedDescription)
