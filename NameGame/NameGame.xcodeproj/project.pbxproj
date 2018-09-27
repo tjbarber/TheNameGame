@@ -18,6 +18,7 @@
 		ACBE2BD8215C325F005553AB /* HomeController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACBE2BD7215C325F005553AB /* HomeController.swift */; };
 		ACBE2BDA215C3ECC005553AB /* CongratulationsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACBE2BD9215C3ECC005553AB /* CongratulationsController.swift */; };
 		ACBF4009215C4A6400AFD3C6 /* TimeDisplayHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACBF4008215C4A6400AFD3C6 /* TimeDisplayHelper.swift */; };
+		ACBF400B215C91C600AFD3C6 /* SocialButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACBF400A215C91C600AFD3C6 /* SocialButton.swift */; };
 		ACCBBBF0215C47040019C316 /* StatsStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACCBBBEF215C47040019C316 /* StatsStore.swift */; };
 		ACCBBBF2215C48740019C316 /* StatsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACCBBBF1215C48740019C316 /* StatsController.swift */; };
 		EC6A1AB71C8F6E5A0071F529 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC6A1AB61C8F6E5A0071F529 /* AppDelegate.swift */; };
@@ -39,6 +40,7 @@
 		ACBE2BD7215C325F005553AB /* HomeController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = HomeController.swift; path = ViewControllers/HomeController.swift; sourceTree = "<group>"; };
 		ACBE2BD9215C3ECC005553AB /* CongratulationsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = CongratulationsController.swift; path = ViewControllers/CongratulationsController.swift; sourceTree = "<group>"; };
 		ACBF4008215C4A6400AFD3C6 /* TimeDisplayHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = TimeDisplayHelper.swift; path = Helpers/TimeDisplayHelper.swift; sourceTree = "<group>"; };
+		ACBF400A215C91C600AFD3C6 /* SocialButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = SocialButton.swift; path = Views/SocialButton.swift; sourceTree = "<group>"; };
 		ACCBBBEF215C47040019C316 /* StatsStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = StatsStore.swift; path = Services/StatsStore.swift; sourceTree = "<group>"; };
 		ACCBBBF1215C48740019C316 /* StatsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = StatsController.swift; path = ViewControllers/StatsController.swift; sourceTree = "<group>"; };
 		EC6A1AB31C8F6E5A0071F529 /* NameGame.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NameGame.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -65,6 +67,7 @@
 			isa = PBXGroup;
 			children = (
 				ECF50AB41C9331CA00C41A1D /* FaceButton.swift */,
+				ACBF400A215C91C600AFD3C6 /* SocialButton.swift */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -219,6 +222,7 @@
 				ACBF4009215C4A6400AFD3C6 /* TimeDisplayHelper.swift in Sources */,
 				AC073CEA21597BD5007BFEAC /* TeamMembers.swift in Sources */,
 				ACBE2BD8215C325F005553AB /* HomeController.swift in Sources */,
+				ACBF400B215C91C600AFD3C6 /* SocialButton.swift in Sources */,
 				AC6880E6215B315100D4A9A5 /* ImageCache.swift in Sources */,
 				EC6A1AB91C8F6E5A0071F529 /* NameGameViewController.swift in Sources */,
 				AC6880E8215B32FD00D4A9A5 /* ImageOperations.swift in Sources */,

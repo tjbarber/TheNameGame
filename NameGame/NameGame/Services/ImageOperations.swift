@@ -36,8 +36,12 @@ class ImageDownloader: Operation {
         }
         
         guard let headshotImage = self.headshotImage else { return }
+        guard let imageURLString = headshotImage.imageURLString else {
+            headshotImage.image = #imageLiteral(resourceName: "WTPlaceholder")
+            return
+        }
         
-        let imageURLStringWithScheme = "http:\(headshotImage.imageURLString)"
+        let imageURLStringWithScheme = "http:\(imageURLString)"
         guard let imageURL = URL(string: imageURLStringWithScheme) else { return }
         
         if let cachedImage = ImageCache.sharedInstance.get(fileUrl: imageURL) {

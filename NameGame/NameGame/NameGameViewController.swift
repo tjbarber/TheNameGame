@@ -187,8 +187,7 @@ class NameGameViewController: UIViewController {
             return
         }
         
-        guard let imageURLString = member.headshot.url else { return }
-        let headshotImage = HeadshotImage(imageURLString: imageURLString)
+        let headshotImage = HeadshotImage(imageURLString: member.headshot.url)
         let downloader = ImageDownloader(headshotImage: headshotImage)
         
         downloader.completionBlock = { [weak button, weak member] in

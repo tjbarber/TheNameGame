@@ -40,7 +40,6 @@ class Headshot: Codable {
     let url: String?
     let alt: String
     let height, width: Int?
-    var image: UIImage?
     
     private enum CodingKeys: String, CodingKey {
         case type, mimeType, id, url, alt, height, width
@@ -57,10 +56,10 @@ class Headshot: Codable {
 }
 
 class HeadshotImage {
-    var imageURLString: String
+    var imageURLString: String?
     var image: UIImage?
     
-    init(imageURLString: String) {
+    init(imageURLString: String?) {
         self.imageURLString = imageURLString
     }
 }

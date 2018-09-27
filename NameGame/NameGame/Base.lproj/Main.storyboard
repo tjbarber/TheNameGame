@@ -371,14 +371,14 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="vEb-jZ-6Ur">
-                                <rect key="frame" x="67.5" y="201" width="240" height="128"/>
+                                <rect key="frame" x="67.5" y="263" width="240" height="128"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="240" id="Et4-rX-hwV"/>
                                     <constraint firstAttribute="height" constant="128" id="KvU-qX-c23"/>
                                 </constraints>
                             </imageView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="{{ MEMBER BIO }}" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1Si-ef-wN3">
-                                <rect key="frame" x="67.5" y="351" width="240" height="20.5"/>
+                                <rect key="frame" x="67.5" y="413" width="240" height="20.5"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="240" id="q3I-rN-Rmf"/>
                                 </constraints>
@@ -386,21 +386,30 @@
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <stackView opaque="NO" contentMode="scaleToFill" distribution="fillProportionally" alignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="MdR-31-hOE">
+                                <rect key="frame" x="87.5" y="199" width="200" height="44"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="44" id="V4I-87-aAH"/>
+                                    <constraint firstAttribute="width" constant="200" id="f1L-Nc-Qbp"/>
+                                </constraints>
+                            </stackView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
+                            <constraint firstItem="MdR-31-hOE" firstAttribute="top" secondItem="e40-Hj-kpN" secondAttribute="bottom" constant="20" id="1iI-xM-bVA"/>
                             <constraint firstItem="Lfz-p5-mDR" firstAttribute="centerX" secondItem="w3v-yT-g7g" secondAttribute="centerX" id="6GL-wh-VOo"/>
                             <constraint firstItem="e40-Hj-kpN" firstAttribute="top" secondItem="lpj-dY-1c1" secondAttribute="bottom" constant="8" id="6sh-Uq-5cX"/>
                             <constraint firstItem="3UU-tM-19P" firstAttribute="top" secondItem="LdG-di-WEJ" secondAttribute="bottom" constant="44" id="7tT-Fs-otU"/>
                             <constraint firstItem="e40-Hj-kpN" firstAttribute="centerX" secondItem="w3v-yT-g7g" secondAttribute="centerX" id="9Oc-Ul-ODs"/>
                             <constraint firstItem="LdG-di-WEJ" firstAttribute="centerX" secondItem="w3v-yT-g7g" secondAttribute="centerX" id="AWp-wh-HaH"/>
                             <constraint firstItem="Lfz-p5-mDR" firstAttribute="top" secondItem="eua-IL-TZa" secondAttribute="bottom" constant="40" id="TMp-rR-m4H"/>
-                            <constraint firstItem="vEb-jZ-6Ur" firstAttribute="top" secondItem="e40-Hj-kpN" secondAttribute="bottom" constant="22" id="cyL-Yk-DSt"/>
                             <constraint firstItem="lpj-dY-1c1" firstAttribute="centerX" secondItem="w3v-yT-g7g" secondAttribute="centerX" id="dcu-Qb-kh3"/>
                             <constraint firstItem="1Si-ef-wN3" firstAttribute="centerX" secondItem="w3v-yT-g7g" secondAttribute="centerX" id="doi-lv-Fag"/>
                             <constraint firstItem="vEb-jZ-6Ur" firstAttribute="centerX" secondItem="w3v-yT-g7g" secondAttribute="centerX" id="doz-5s-OH6"/>
                             <constraint firstItem="1Si-ef-wN3" firstAttribute="top" secondItem="vEb-jZ-6Ur" secondAttribute="bottom" constant="22" id="eTf-7Y-hKr"/>
+                            <constraint firstItem="MdR-31-hOE" firstAttribute="centerX" secondItem="w3v-yT-g7g" secondAttribute="centerX" id="mZL-Bh-Fxs"/>
                             <constraint firstItem="lpj-dY-1c1" firstAttribute="top" secondItem="Lfz-p5-mDR" secondAttribute="bottom" constant="44" id="rAK-cI-L7U"/>
+                            <constraint firstItem="vEb-jZ-6Ur" firstAttribute="top" secondItem="MdR-31-hOE" secondAttribute="bottom" constant="20" id="yuw-oK-SzT"/>
                         </constraints>
                     </view>
                     <connections>
@@ -408,12 +417,14 @@
                         <outlet property="memberImageView" destination="vEb-jZ-6Ur" id="Fmy-nY-NDt"/>
                         <outlet property="memberJobTitleLabel" destination="e40-Hj-kpN" id="nMW-9O-H8M"/>
                         <outlet property="memberNameLabel" destination="lpj-dY-1c1" id="oPo-wH-pKm"/>
+                        <outlet property="socialMediaHeightConstraint" destination="V4I-87-aAH" id="mUw-3H-brC"/>
+                        <outlet property="socialMediaStackView" destination="MdR-31-hOE" id="yIH-eX-7hI"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="CkF-2F-gh1" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <exit id="AFO-3d-YOo" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="1326" y="378"/>
+            <point key="canvasLocation" x="1325.5999999999999" y="377.36131934032989"/>
         </scene>
         <!--Stats Controller-->
         <scene sceneID="ecI-tE-UtM">
