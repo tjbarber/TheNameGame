@@ -147,7 +147,9 @@ class NameGameViewController: UIViewController {
         self.nameGame.loadGameData { [unowned self] members, error in
             
             if error != nil {
-                // FIXME: Add error handling
+                AlertHelper.showAlert(withTitle: "An error occurred", withMessage: "Unable to download game data.", presentingViewController: self) { _ in
+                    self.dismiss(animated: true, completion: nil)
+                }
             }
             
             if let unwrappedMembers = members {
