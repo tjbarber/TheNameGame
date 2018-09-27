@@ -19,6 +19,7 @@ class NameGameViewController: UIViewController {
     @IBOutlet weak var timeElapsedLabel: UILabel!
     
     let nameGame = NameGame()
+    let timeFormatter = TimeFormattingHelper()
     var members: TeamMembers = []
     var buttonMap: [UIButton: TeamMember] = [:]
     var removedButtonMap: [UIButton: TeamMember] = [:]
@@ -71,14 +72,13 @@ class NameGameViewController: UIViewController {
         
         let isAnswerCorrect = self.checkAnswer(tappedMember: tappedMember, selectedMember: selectedMember)
         
-        let updateAttemptsBlock: (UIAlertAction) -> Void = { [unowned self] _ in
-            self.attemptsMade += 1
-        }
-        
         if isAnswerCorrect {
-            AlertHelper.showAlert(withTitle: "Congratulations!", withMessage: "You know your coworkers name!", presentingViewController: self, completionHandler: updateAttemptsBlock)
+            StatsStore.sharedInstance.addStats(elapsedTime: self.elapsedTime, attemptsMade: self.attemptsMade)
+            self.performSegue(withIdentifier: "congratulationsSegue", sender: self)
         } else {
-            AlertHelper.showAlert(withTitle: "Oops!", withMessage: "You chose the wrong person. Try again!", presentingViewController: self, completionHandler: updateAttemptsBlock)
+            AlertHelper.showAlert(withTitle: "Oops!", withMessage: "You chose the wrong person. Try again!", presentingViewController: self) { [unowned self] _ in
+                self.attemptsMade += 1
+            }
         }
         
     }
@@ -100,6 +100,11 @@ class NameGameViewController: UIViewController {
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         let orientation: UIDeviceOrientation = size.height > size.width ? .portrait : .landscapeLeft
         configureSubviews(orientation)
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        guard let viewController = segue.destination as? CongratulationsController else { return }
+        viewController.member = selectedMember
     }
 
     func loadGameData() {
@@ -229,17 +234,7 @@ extension NameGameViewController {
     }
     
     func updateElapsedTimeLabel() {
-        let minutes = self.elapsedTime / 60
-        let seconds = self.elapsedTime % 60
-        
-        let minutesStr = String(minutes)
-        var secondsStr = String(seconds)
-        
-        // If we only have a single second passed we don't want the timer looking like 1:5 when it should look like 1:05
-        if secondsStr.count == 1 {
-            secondsStr = "0\(secondsStr)"
-        }
-        
-        self.timeElapsedLabel.text = "Time: \(minutesStr):\(secondsStr)"
+        let elapsedTimeString = timeFormatter.timeStringFromInterval(self.elapsedTime)
+        self.timeElapsedLabel.text = "Time: \(elapsedTimeString)"
     }
 }
