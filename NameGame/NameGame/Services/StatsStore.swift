@@ -24,13 +24,15 @@ class StatsStore {
         if self.overallAttempts == 0 || self.gamesPlayed == 0 {
             return 0
         }
+        
         return self.overallAttempts / self.gamesPlayed
     }
     
-    func averageTimePlayed() -> Int {
+    func averageTimePlayed() -> Float {
         if self.overallTimePlayed == 0 || self.gamesPlayed == 0 {
             return 0
         }
-        return self.overallTimePlayed / self.gamesPlayed
+        
+        return Float(self.overallTimePlayed) / Float(self.gamesPlayed)
     }
 }

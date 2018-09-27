@@ -44,7 +44,7 @@ class NameGameViewController: UIViewController {
         }
     }
     
-    // Hint mode methods
+    // Hint mode properties
     var hintTimer: Timer?
     var hintModeEnabled = false
     var maxHints = 0
@@ -67,6 +67,8 @@ class NameGameViewController: UIViewController {
     }
 
     @IBAction func faceTapped(_ button: FaceButton) {
+        self.attemptsMade += 1
+        
         guard let tappedMember = self.getMemberFromButtonMap(button),
               let selectedMember = self.selectedMember else { return }
         
@@ -76,9 +78,7 @@ class NameGameViewController: UIViewController {
             StatsStore.sharedInstance.addStats(elapsedTime: self.elapsedTime, attemptsMade: self.attemptsMade)
             self.performSegue(withIdentifier: "congratulationsSegue", sender: self)
         } else {
-            AlertHelper.showAlert(withTitle: "Oops!", withMessage: "You chose the wrong person. Try again!", presentingViewController: self) { [unowned self] _ in
-                self.attemptsMade += 1
-            }
+            AlertHelper.showAlert(withTitle: "Oops!", withMessage: "You chose the wrong person. Try again!", presentingViewController: self)
         }
         
     }

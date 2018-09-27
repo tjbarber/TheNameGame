@@ -25,4 +25,13 @@ class TimeFormattingHelper {
         
         return formattedString
     }
+    
+    func timeStringFromInterval(_ interval: Float) -> String {
+        guard let timeInterval = TimeInterval(exactly: interval),
+            let formattedString = formatter.string(from: timeInterval) else {
+                return "0:00"
+        }
+        
+        return formattedString
+    }
 }
