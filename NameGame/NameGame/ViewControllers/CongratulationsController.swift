@@ -54,7 +54,6 @@ class CongratulationsController: UIViewController {
             
             NSLayoutConstraint.activate([
                 NSLayoutConstraint.init(item: socialButtonContainer, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 44.0),
-                NSLayoutConstraint.init(item: socialButtonContainer, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 44.0),
                 NSLayoutConstraint.init(item: button, attribute: .centerX, relatedBy: .equal, toItem: socialButtonContainer, attribute: .centerX, multiplier: 1.0, constant: 0),
                 NSLayoutConstraint.init(item: button, attribute: .centerY, relatedBy: .equal, toItem: socialButtonContainer, attribute: .centerY, multiplier: 1.0, constant: 0.0),
                 NSLayoutConstraint.init(item: button, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 44.0),

@@ -184,6 +184,7 @@ class NameGameViewController: UIViewController {
     
     func loadImage(forButton button: FaceButton, withMember member: TeamMember) {
         if ImageOperations.sharedInstance.downloadsInProgress[member.id] != nil {
+            
             return
         }
         
