@@ -60,7 +60,7 @@ class ImageDownloader: Operation {
             ImageCache.sharedInstance.set(fileUrl: imageURL, image: image)
             headshotImage.image = image
         } catch (let e) {
-            // set image status
+            headshotImage.image = #imageLiteral(resourceName: "WTPlaceholder")
             print(e.localizedDescription)
         }
         

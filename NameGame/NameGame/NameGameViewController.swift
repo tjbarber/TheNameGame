@@ -145,7 +145,6 @@ class NameGameViewController: UIViewController {
 
     func loadGameData() {
         self.nameGame.loadGameData { [unowned self] members, error in
-            
             if error != nil {
                 AlertHelper.showAlert(withTitle: "An error occurred", withMessage: "Unable to download game data.", presentingViewController: self) { _ in
                     self.dismiss(animated: true, completion: nil)
@@ -186,7 +185,6 @@ class NameGameViewController: UIViewController {
     
     func loadImage(forButton button: FaceButton, withMember member: TeamMember) {
         if ImageOperations.sharedInstance.downloadsInProgress[member.id] != nil {
-            
             return
         }
         
@@ -199,6 +197,11 @@ class NameGameViewController: UIViewController {
                 ImageOperations.sharedInstance.downloadsInProgress.removeValue(forKey: member.id)
                 self.memberImages[member.id] = headshotImage
                 button?.setBackgroundImage(headshotImage.image, for: UIControl.State.normal)
+                
+                // This code sets the contentMode on the backgroundImageView. It was originally being scaled to fit the imageView
+                button?.setNeedsLayout()
+                button?.subviews.first?.contentMode = .scaleAspectFill
+                
                 UIView.animate(withDuration: 0.8, delay: 0.0, options: .curveEaseIn, animations: {
                     button?.tintView.alpha = 0.0
                 })
@@ -254,6 +257,8 @@ extension NameGameViewController {
     @objc func removeRandomMemberFromSelection() {
         guard let randomMember = self.buttonMap.randomElement() else { return }
         
+        // The branch happens when there is only one more person which is the selected person
+        // and if we've reaching the max number of hints
         if randomMember.value.id == self.selectedMember?.id && self.removedButtonMap.count == self.maxHints {
             self.hintTimer?.invalidate()
             return

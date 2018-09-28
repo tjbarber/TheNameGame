@@ -11,7 +11,6 @@ import UIKit
 
 open class FaceButton: UIButton {
 
-    var id: Int = 0
     var tintView: UIView = UIView(frame: CGRect.zero)
 
     override init(frame: CGRect) {
@@ -37,6 +36,6 @@ open class FaceButton: UIButton {
         tintView.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
         tintView.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
         tintView.topAnchor.constraint(equalTo: topAnchor).isActive = true
-        tintView.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
+        tintView.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true        
     }
 }

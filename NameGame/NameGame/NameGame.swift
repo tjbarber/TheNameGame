@@ -50,10 +50,6 @@ class NameGame {
         }
     }
     
-    func loadMemberImages(completion: @escaping ([UIImage]?, Error?) -> Void) {
-        
-    }
-    
     fileprivate func randomlySelect(_ members: TeamMembers) -> [TeamMember] {
         var selectedMembers = [TeamMember]()
         

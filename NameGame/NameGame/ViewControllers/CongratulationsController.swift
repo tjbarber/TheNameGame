@@ -27,7 +27,13 @@ class CongratulationsController: UIViewController {
         if let member = self.member {
             self.memberNameLabel.text = "\(member.firstName) \(member.lastName)"
             self.memberJobTitleLabel.text = member.jobTitle
-            self.memberBioLabel.text = member.bio
+            
+            // Sometimes the bio and the job title are the same, if so we'll set the bio title text to nil
+            if member.jobTitle != member.bio {
+                self.memberBioLabel.text = member.bio
+            } else {
+                self.memberBioLabel.text = nil
+            }
             
             self.memberImageView.image = memberImage?.image
             
@@ -40,8 +46,9 @@ class CongratulationsController: UIViewController {
     }
     
     func layoutSocialIcons() {
-        // This code is built with the intention that there may be more than one social link
-        // Turns out in the data there isn't, but I still like this code
+        // This code is built with the intention that there may be more than one social link.
+        // The socialLinks node in the JSON payload is an array and not a single dictionary,
+        // so assuming that we may eventually have more than one socialLink is entirely possible.
         guard let member = self.member else { return }
         for socialLink in member.socialLinks {
             let socialButtonContainer = UIView(frame: CGRect.zero)
@@ -75,13 +82,7 @@ class CongratulationsController: UIViewController {
         if let socialUrlString = sender.socialUrl,
            let socialUrl = URL(string: socialUrlString) {
             let safariController = SFSafariViewController(url: socialUrl)
-            safariController.delegate = self
-            
-            present(safariController, animated: true)
+            self.present(safariController, animated: true)
         }
     }
-}
-
-extension CongratulationsController: SFSafariViewControllerDelegate {
-    
 }

@@ -36,7 +36,5 @@ class HomeController: UIViewController {
         
     }
     
-    @IBAction func prepareForUnwind(_ segue: UIStoryboardSegue) {
-        
-    }
+    @IBAction func prepareForUnwind(_ segue: UIStoryboardSegue) {}
 }
