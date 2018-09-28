@@ -254,7 +254,7 @@ extension NameGameViewController {
         self.maxHints = self.nameGame.numberPeople - 1
     }
     
-    @objc func removeRandomMemberFromSelection() {
+    func removeRandomMemberFromSelection() {
         guard let randomMember = self.buttonMap.randomElement() else { return }
         
         // The branch happens when there is only one more person which is the selected person
